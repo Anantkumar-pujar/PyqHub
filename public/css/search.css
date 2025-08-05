@@ -1,0 +1,246 @@
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #333; /* Dark theme background */
+    margin: 0;
+    padding: 0;
+    color: #ffffff; /* Light text color for better contrast */
+}
+
+header {
+    background-color: #181818;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    border-bottom: 1px solid #333;
+}
+
+header h1 {
+    color: white;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+header div a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: color 0.3s ease;
+}
+
+header div a:hover {
+    color: #1e90ff;
+}
+
+#home-container {
+    padding: 40px 20px;
+}
+
+h2 {
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 40px;
+}
+
+p {
+    font-size: 20px;
+    padding-top: 0px;
+    text-align: center;
+    color: #bdbdbd;
+}
+
+/* Search Section */
+.search {
+    margin-top: 50px;
+}
+
+.search-abcd {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #181818;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    max-width: 100%;    
+    border-bottom:  1px solid #333333;
+    padding: 15px 15px 30px 15px;
+}
+
+.search-container select {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #333;
+    color: #ffffff;
+    width: 300px;
+}
+
+.search-container input {
+    padding: 0 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #333;
+    color: #ffffff;
+    width: 300px;
+    align-content: center;
+}
+
+.search-container button {
+    filter: invert(1);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.search-container button img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s;
+}
+
+.search-container button:hover img {
+    filter: invert(0);
+    transform: scale(1.1);
+}
+
+.search-container input:focus, .search-container select:focus {
+    border: 2px solid #1e90ff;
+    outline: none;
+}
+
+/* Search Tips Container */
+.search-tips-container {
+    max-width: 800px;
+    margin: 10px auto;
+    padding: 15px 20px;
+    background-color: #1e1e1e;
+    color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+}
+
+.search-tips {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.info-icon {
+    font-size: 24px;
+    color: #3b82f6;
+    background-color: #121212;
+    padding: 10px;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tips-content h4 {
+    margin: 0 0 5px;
+    font-size: 18px;
+    color: #3b82f6;
+}
+
+.tips-content p {
+    margin: 0;
+    font-size: 14px;
+    color: #cfcfcf;
+}
+
+
+/* Typeahead Search Bar */
+.typeahead, .tt-query, .tt-hint {
+    border: 1px solid #555;
+    border-radius: 5px;
+    font-size: 16px;
+    height: 40px;
+    line-height: 0px;
+    outline: none;
+    background-color: #1c1c1c;
+    color: #ffffff;
+}
+
+.typeahead:focus {
+    border: 2px solid #1e90ff;
+}
+
+.tt-menu {
+    background-color: #181818;
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 12px;
+    padding: 8px 0;
+    z-index: 9999;
+}
+
+.tt-suggestion {
+    font-size: 16px;
+    padding: 0 10px 0 10px;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background-color 0.3s;
+}
+
+.tt-suggestion:hover {
+    color: #1e90ff;
+}
+
+/* Footer */
+.status-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #181818;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.9rem;
+    border-top: 1px solid #333;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .category-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .search-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .search-container select, .search-container input {
+        width: 100%;
+    }
+
+    .typeahead, .tt-query, .tt-hint {
+        width: 100%;
+    }
+}

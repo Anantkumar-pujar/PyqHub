@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Pending Uploads</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="header">
+        <h1>PyQHUB</h1>
+    </header>
+    <h1>Admin Dashboard</h1>
+    <h2>Pending Uploads</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Filename</th>
+                <th>Subject Name</th>
+                <th>Subject Code</th>
+                <th>Uploaded By</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="pending-files">
+            <!-- Data will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <footer class="status-bar">
+        © 2024 PyQHUB. All rights Reserved.
+    </footer>
+    <script>
+        // Fetch Pending Files from the API
+        async function fetchPendingFiles() {
+            try {
+                const response = await fetch('/pending');
+                if (!response.ok) throw new Error('Failed to fetch pending files');
+                const files = await response.json();
+
+                const tableBody = document.getElementById('pending-files');
+                tableBody.innerHTML = ''; // Clear previous data
+
+                if (files.length === 0) {
+                    // If no pending files
+                    const noDataRow = document.createElement('tr');
+                    const noDataCell = document.createElement('td');
+                    noDataCell.colSpan = 6;
+                    noDataCell.textContent = 'No pending uploads for approval.';
+                    noDataCell.style.textAlign = 'center';
+                    noDataCell.className = 'no-data-message';
+                    noDataRow.appendChild(noDataCell);
+                    tableBody.appendChild(noDataRow);
+                    return;
+                }
+
+                files.forEach(file => {
+                    const row = document.createElement('tr');
+
+                    // Create View and Download Links
+                    const fileLink = document.createElement('a');
+                    fileLink.href = `${file.file_url}`;
+                    fileLink.target = '_blank';
+                    fileLink.textContent = file.filename;
+
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = `${file.file_url}?fl_attachment=${file.filename}`;
+                    downloadLink.textContent = 'Download';
+                    downloadLink.className = 'download';
+                    row.innerHTML = `
+                        <td>${file.id}</td>
+                        <td></td>
+                        <td>${file.subject_name}</td>
+                        <td>${file.subject_code}</td>
+                        <td>${file.uploaded_by}</td>
+                        <td>
+                            <button class="approve" onclick="approveFile(${file.id})">Approve</button>
+                            <button class="reject" onclick="rejectFile(${file.id})">Reject</button>
+                        </td>
+                    `;
+
+                    // Insert links into the second cell (Filename)
+                    const filenameCell = row.cells[1];
+                    filenameCell.appendChild(fileLink);
+                    filenameCell.appendChild(document.createTextNode(' | '));
+                    filenameCell.appendChild(downloadLink);
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error(error);
+                alert('Error fetching pending files');
+            }
+        }
+
+        // Approve a File
+        async function approveFile(fileId) {
+            try {
+                const response = await fetch(`/approve/${fileId}`, { method: 'POST' });
+                const message = await response.text();
+                alert(message);
+                fetchPendingFiles(); // Refresh the table
+            } catch (error) {
+                console.error(error);
+                alert('Error approving the file');
+            }
+        }
+
+        // Reject a File
+        async function rejectFile(fileId) {
+            try {
+                const response = await fetch(`/reject/${fileId}`, { method: 'POST' });
+                const message = await response.text();
+                alert(message);
+                fetchPendingFiles(); // Refresh the table
+            } catch (error) {
+                console.error(error);
+                alert('Error rejecting the file');
+            }
+        }
+
+        // Load pending files on page load
+        document.addEventListener('DOMContentLoaded', fetchPendingFiles);
+    </script>
+
+</body>
+
+</html>

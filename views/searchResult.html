@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>PyQHUB - Search Results</title>
+    <link rel="stylesheet" href="/css/searchResult.css"/>
+</head>
+<body>
+    <header class="header">
+        <h1>PyQHUB</h1>
+        <div>
+            <a href="/search.html" class="upload-btn">Go Back</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </header>
+
+    <main>
+        <h2>Search Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject Name</th>
+                    <th>Subject Code</th>
+                    <th>Category</th>
+                    <th>Year</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="file-results">
+                <!-- Results will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="status-bar">
+        © 2024 PyQHUB. All rights Reserved.
+    </footer>
+
+    <script>
+        async function fetchSearchResults() {
+            const params = new URLSearchParams(window.location.search);
+            try {
+                const response = await fetch(`/search-files?${params.toString()}`);
+                if (!response.ok) throw new Error('Failed to fetch search results');
+                const files = await response.json();
+
+                const tableBody = document.getElementById('file-results');
+                tableBody.innerHTML = '';
+
+                if (files.length === 0) {
+                    const noDataRow = document.createElement('tr');
+                    const noDataCell = document.createElement('td');
+                    noDataCell.colSpan = 6;
+                    noDataCell.textContent = 'No search result found.';
+                    noDataCell.style.textAlign = 'center';
+                    noDataCell.className = 'no-data-message';
+                    noDataRow.appendChild(noDataCell);
+                    tableBody.appendChild(noDataRow);
+                    return;
+                }
+
+                files.forEach(file => {
+                    const subjectName = file.subject_name || 'N/A';
+                    const subjectCode = file.subject_code || 'N/A';
+                    const category = file.category || 'N/A';
+                    const year = file.academic_year || 'N/A';
+                    const fileUrl = file.file_url || '#';
+
+                    // Fix: Get raw viewable and downloadable Cloudinary links
+                    const rawViewUrl = fileUrl.replace('/image/upload/', '/raw/upload/');
+                    const downloadUrl = `${fileUrl}?fl_attachment=${file.filename}`;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${subjectName}</td>
+                        <td>${subjectCode}</td>
+                        <td>${category}</td>
+                        <td>${year}</td>
+                        <td>
+                            <a href="${rawViewUrl}" target="_blank">View</a> |
+                            <a href="${downloadUrl}" download>Download</a>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+                alert('An error occurred while fetching search results.');
+            }
+        }
+
+        fetchSearchResults();
+    </script>
+</body>
+</html>

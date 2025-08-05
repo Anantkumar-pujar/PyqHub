@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyQHub - Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container" id="login-form">
+        <h2>Login</h2>
+        <form id="login-for" action="/login" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+            <label for="password">Password:</label>
+            <div class="password-container">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <span class="toggle-password">
+                    <i class="fa-solid fa-eye"></i>
+                </span>
+            </div>
+
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <button type="submit">Login</button>
+        </form>
+        <p><a href="/forgot-password" id="forgot-password">Forgot Password?</a></p>
+        <p>Don't have an account? <a href="/signup" id="show-signup">Sign Up</a></p>
+    </div>
+
+    <script>
+        // Handle the form submission with AJAX
+        document.getElementById('login-for').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var form = event.target;
+            const formData = new URLSearchParams(new FormData(form)).toString();
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded' // Ensure proper content type
+                },
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.error,
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: data.message,
+                        }).then(() => {
+                            window.location.href = '/home';
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'An error occurred',
+                        text: 'Please try again later.',
+                    });
+                });
+        });
+    </script>
+
+    <script src="/js/toggle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

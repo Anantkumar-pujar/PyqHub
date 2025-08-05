@@ -1,0 +1,32 @@
+.typeahead, .tt-query, .tt-hint {
+    border: 2px solid #cccccc;
+    border-radius: 8px;
+    font-size: 18px;
+    height: 36px;
+    padding: 8px;
+    width: 100%;
+}
+
+.typeahead {
+    background-color: #ffffff;
+}
+
+.tt-menu {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 4px;
+    width: 100%;
+}
+
+.tt-suggestion {
+    padding: 8px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.tt-suggestion:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}

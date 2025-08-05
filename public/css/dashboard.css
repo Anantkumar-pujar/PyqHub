@@ -1,0 +1,139 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    background-color: #333;
+    color: #f9fafb;
+    padding: 0;
+}
+
+header {
+    width: 100%;
+    background-color: #181818;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    box-shadow: 0 0 20px rgba(51, 51, 51, 0.2);
+    position: sticky;
+}
+
+header h1 {
+    color: white;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+h1 {
+    margin-top: 30px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 2rem;
+}
+
+h2 {
+    margin: 10px 0;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #9ca3af;
+}
+
+table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #222;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+thead tr {
+    background-color: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: left;
+}
+
+th, td {
+    padding: 15px;
+    border-bottom: 1px solid #374151;
+    text-align: center;
+    vertical-align: middle;
+}
+
+tbody tr:hover {
+    background-color: #262626;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.no-data-message {
+    color: #9ca3af;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+a {
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    color: #2563eb;
+}
+
+button {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.approve {
+    background-color: #228B22;
+    color: #ffffff;
+}
+
+.approve:hover {
+    background-color: #1E781E;
+}
+
+.reject {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+.reject:hover {
+    background-color: #b91c1c;
+}
+
+.download {
+    font-size: 0.9rem;
+    color: #60a5fa;
+}
+
+.download:hover {
+    color: #2563eb;
+}
+
+/* Footer */
+.status-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #181818;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.9rem;
+    border-top: 1px solid #333;
+}

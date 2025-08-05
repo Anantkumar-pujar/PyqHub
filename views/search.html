@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyQHUB</title>
+    <link rel="stylesheet" href="/css/search.css">
+</head>
+
+<body>
+    <header class="header">
+        <h1>PyQHUB</h1>
+        <div>
+            <a href="/home.html" class="upload-btn">Home</a>
+            <a href="/upload" id="dashboard-btn" class="dashboard-btn" style="display: none;">Upload</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </header>
+    <main id="home-container">
+        <section class="search">
+            <h2>Search Our Archive</h2>
+            <p>Find the exact question papers you need for your preparation</p>
+            <div class="search-abcd">
+                <div class="search-container">
+                    <!-- Dropdown for selecting the category (CIE-1, CIE-2, SEE) -->
+                    <select class="form-control" id="search-category" style="width: 25%;">
+                        <option value="all">Select Categories</option>
+                        <option value="CIE 1">CIE-1</option>
+                        <option value="CIE 2">CIE-2</option>
+                        <option value="SEE">SEE</option>
+                    </select>
+                    <!-- Search input field -->
+                    <input type="text" class="typeahead form-control" id="search-bar"
+                        placeholder="Enter Subject Code or Name" style="flex: 1;">
+
+                    <!-- Search button with icon -->
+                    <button id="search-button" style="background: none; border: none; cursor: pointer;">
+                        <img src="https://img.icons8.com/ios-glyphs/30/search.png" alt="Search"
+                            style="width: 30px; height: 30px;">
+                    </button>
+                </div>
+                <div class="search-tips-container">
+                    <div class="search-tips">
+                        <span class="info-icon">ℹ</span>
+                        <div class="tips-content">
+                            <h4>Search Tips</h4>
+                            <p>Use specific subject names or subject code for better results. All papers are verified and
+                                available in PDF format.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="status-bar">
+        © 2024 PyQHUB. All rights Reserved.
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.bundle.min.js"></script>
+
+    <script src="/js/search.js"></script>
+
+    <script>
+        // Simulating user role
+        const userRole = "admin";
+
+        // Show dashboard button if user is admin
+        if (typeof userRole !== 'undefined' && userRole === 'admin') {
+            document.getElementById("dashboard-btn").style.display = "inline-block";
+        }
+    </script>
+    <script>
+        document.getElementById('dashboard-btn').addEventListener('onclick', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var form = event.target;
+            const formData = new URLSearchParams(new FormData(form)).toString();
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.error,
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: data.message,
+                        }).then(() => {
+                            window.location.href = '/home';
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'An error occurred',
+                        text: 'Please try again later.',
+                    });
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Initialize typeahead for the search bar
+            var searchBar = $('#search-bar');
+
+            // local data source for the Typeahead suggestion
+            var subjects = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/get-subjects?query=%QUERY', // Fetch filtered subjects based on query input
+                    wildcard: '%QUERY',
+                    transform: function (response) {
+                        // Assuming the response is an array of subject objects
+                        return response.reduce(function (accumulatedSuggestions, subject) {
+                            const typedQuery = $('#search-bar').val().trim().toLowerCase();
+
+                            // Check if typed query matches subject_name or subject_code (partial match)
+                            let suggestion = '';
+                            if (typedQuery && subject.subject_name.toLowerCase().includes(typedQuery)) {
+                                suggestion = subject.subject_name;
+                            } else if (typedQuery && subject.subject_code.toLowerCase().includes(typedQuery)) {
+                                suggestion = subject.subject_code;
+                            } else {
+                                suggestion = subject.subject_name || subject.subject_code;  // Fallback to either one
+                            }
+
+                            // Add to the accumulated suggestions if it's not already included
+                            if (suggestion && !accumulatedSuggestions.includes(suggestion)) {
+                                accumulatedSuggestions.push(suggestion);
+                            }
+
+                            return accumulatedSuggestions;
+                        }, []);
+
+                    }
+                }
+            });
+
+            // Initialize the typeahead on the search input field
+            searchBar.typeahead({
+                minLength: 2, // Start suggesting after typing 2 characters
+                highlight: true // Enable highlighting of the match in the suggestions
+            }, {
+                name: 'subjects',
+                source: subjects
+            });
+
+            // Handle the search button click
+            $('#search-button').click(function () {
+                var searchQuery = searchBar.val().trim();
+                var category = $('#search-category').val();
+
+                if (!searchQuery && category === 'all') {
+                    alert('Please enter a subject name/code or select a category.');
+                    return;
+                }
+
+                // Redirect to search results with query params
+                var queryParams = new URLSearchParams();
+                if (searchQuery) queryParams.append('subname', searchQuery);
+                if (category !== 'all') queryParams.append('category', category);
+                window.location.href = '/search-results?' + queryParams.toString();
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="/css/upload.css">
+</head>
+
+<body>
+    <h1>Contribute to Our Archive</h1>
+    <p>Help fellow students by sharing your question papers</p>
+    <div class="contain">
+        <div class="container">
+            <form action="/upload" method="POST" enctype="multipart/form-data" id="upload-form">
+                <div class="subject">
+                    <div class="subject-name">
+                        <label for="subject_name">Subject Name:</label>
+                        <input type="text" name="subject_name" id="subject_name" required>
+                    </div>
+                    <div class="subject-code">
+                        <label for="subject_code">Subject Code:</label>
+                        <input type="text" name="subject_code" id="subject_code" required>
+                    </div>
+                </div>
+
+                <label for="academic_year">Academic Year:</label>
+                <input type="text" name="academic_year" id="academic_year" required>
+
+                <label for="category">Category:</label>
+                <select name="category" id="category" required>
+                    <option value="CIE 1">CIE 1</option>
+                    <option value="CIE 2">CIE 2</option>
+                    <option value="SEE">SEE</option>
+                </select>
+
+                <label for="uploaded_by">Uploaded By:</label>
+                <input type="text" name="uploaded_by" id="uploaded_by" placeholder="Enter username" required>
+
+                <label for="file">Choose a file (PDF or Image):</label>
+                <input type="file" id="file" name="file" accept=".pdf, image/*" required>
+
+                <!-- <label for="description">Description:</label>
+                <textarea name="description" id="description"></textarea> -->
+
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+
+        <!-- Guidelines Section -->
+        <div class="contribute-blocks">
+            <div class="contribute-guidelines">
+                <h3>Contribution Guidelines</h3>
+                <ul>
+                    <li>Upload clear, readable scans or digital copies</li>
+                    <li>Ensure correct subject and year information</li>
+                    <li>PDF and Image format only, maximum size 5MB</li>
+                    <li>Papers will be verified before publishing</li>
+                </ul>
+            </div>
+
+            <!-- Why Contribute Section -->
+            <div class="why-contribute">
+                <h3>Why Contribute?</h3>
+                <ul>
+                    <li>Help create a valuable resource for fellow students</li>
+                    <li>Earn community recognition points</li>
+                    <li>Get access to premium features</li>
+                    <li>Join our community of contributors</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = event.target;
+            const formData = new FormData(form); // Use FormData for file uploads
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json()) // Parse JSON response
+                .then(data => {
+                    if (data.error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.error,
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Upload Successful!',
+                            text: data.message,
+                        }).then(() => {
+                            window.location.href = '/upload';
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'An error occurred',
+                        text: 'Please try again later.',
+                    });
+                });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>
