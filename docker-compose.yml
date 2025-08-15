@@ -28,8 +28,7 @@ services:
       - DB_HOST=db
       - APP_URL=http://localhost:3002
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
 volumes:
   postgres_data:
