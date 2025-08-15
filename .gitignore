@@ -13,3 +13,19 @@ logs/
 
 # OS
 .DS_Store
+ 
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Local DB files
+postgres_data/
+
+# Build / runtime
+dist/
+build/
+
+# Misc
+.env.local
+.env.*.local
+.cache
